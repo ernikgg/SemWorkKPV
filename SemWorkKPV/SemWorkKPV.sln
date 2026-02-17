@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36518.9 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SemWorkKPV", "SemWorkKPV\SemWorkKPV.csproj", "{E34F30D8-1AD5-4861-8EB2-A68246D34280}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkdownProcessor", "MarkdownProcessor\MarkdownProcessor.csproj", "{5E18467A-FA54-45F8-80B8-52A0597FB30D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E34F30D8-1AD5-4861-8EB2-A68246D34280}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E34F30D8-1AD5-4861-8EB2-A68246D34280}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E34F30D8-1AD5-4861-8EB2-A68246D34280}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E34F30D8-1AD5-4861-8EB2-A68246D34280}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E18467A-FA54-45F8-80B8-52A0597FB30D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E18467A-FA54-45F8-80B8-52A0597FB30D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E18467A-FA54-45F8-80B8-52A0597FB30D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E18467A-FA54-45F8-80B8-52A0597FB30D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9360BF50-50CB-4EBB-BB50-1D946DAF2D00}
+	EndGlobalSection
+EndGlobal

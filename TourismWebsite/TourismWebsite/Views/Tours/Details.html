@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{{ Tour.Title }} | Jadoo</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/jadoo/assets/img/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/jadoo/assets/img/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/jadoo/assets/img/favicons/favicon-16x16.png">
+    <link rel="shortcut icon" type="image/x-icon" href="/jadoo/assets/img/favicons/favicon.ico">
+
+    <link href="/jadoo/assets/css/theme.css" rel="stylesheet" />
+</head>
+
+<body>
+    <main class="main" id="top">
+
+        <!-- простая шапка как в Jadoo -->
+        <nav class="navbar navbar-expand-lg navbar-light py-4 d-block">
+            <div class="container">
+                <a class="navbar-brand" href="/"><img src="/jadoo/assets/img/logo.svg" height="34" alt="logo" /></a>
+                <div class="ms-auto d-flex gap-2">
+                    <a class="btn btn-outline-dark fw-medium" href="/tours">← Back to Tours</a>
+                    <a class="btn btn-primary fw-medium border-0 primary-btn-shadow" href="/">Home</a>
+                </div>
+            </div>
+        </nav>
+
+        <section class="pt-4 pb-7">
+            <div class="container">
+
+                <div class="row g-5 align-items-start">
+                    <!-- картинка -->
+                    <div class="col-lg-7">
+                        <div class="card overflow-hidden shadow">
+                            <img class="w-100" src="{{ Tour.ImageUrl }}" alt="{{ Tour.Title }}" />
+                        </div>
+                    </div>
+
+                    <!-- инфо -->
+                    <div class="col-lg-5">
+                        <div class="card shadow" style="border-radius:16px;">
+                            <div class="card-body p-4 p-lg-5">
+
+                                {% if Tour.IsTop %}
+                                <span class="badge bg-danger mb-3">Top</span>
+                                {% endif %}
+
+                                <h2 class="mb-2">{{ Tour.Title }}</h2>
+
+                                <div class="d-flex flex-wrap gap-3 align-items-center mb-4">
+                                    <div class="d-flex align-items-center">
+                                        <span class="fw-bold me-2">Price:</span>
+                                        <span>{{ Tour.PriceText }}</span>
+                                    </div>
+
+                                    <div class="d-flex align-items-center">
+                                        <span class="fw-bold me-2">Duration:</span>
+                                        <span>{{ Tour.DurationText }}</span>
+                                    </div>
+                                </div>
+
+                                <p class="text-secondary mb-4">
+                                    This is a demo tour page. Later we will move this description into the database and make it editable.
+                                </p>
+
+                                <!-- CTA -->
+                                <div class="d-flex gap-2">
+                                    <a class="btn btn-danger orange-gradient-btn" href="#!">Book now</a>
+                                    <a class="btn btn-outline-dark" href="/tours">See all tours</a>
+                                </div>
+
+                                <hr class="my-4" />
+
+                                <div class="text-secondary fs--1">
+                                    Tour ID: {{ Tour.Id }}
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="py-5 text-center">
+            <p class="mb-0 text-secondary fs--1 fw-medium">All rights reserved@jadoo.co</p>
+        </div>
+
+    </main>
+
+    <script src="/jadoo/vendors/@popperjs/popper.min.js"></script>
+    <script src="/jadoo/vendors/bootstrap/bootstrap.min.js"></script>
+    <script src="/jadoo/vendors/is/is.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
+    <script src="/jadoo/vendors/fontawesome/all.min.js"></script>
+    <script src="/jadoo/assets/js/theme.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;family=Volkhov:wght@700&amp;display=swap" rel="stylesheet">
+</body>
+</html>

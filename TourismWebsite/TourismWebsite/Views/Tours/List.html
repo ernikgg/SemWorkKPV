@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tours</title>
+    <link href="/jadoo/assets/css/theme.css" rel="stylesheet" />
+</head>
+
+<body>
+    <main class="main" id="top">
+        <section class="pt-7">
+            <div class="container">
+
+                <div class="d-flex justify-content-between align-items-center mb-5">
+                    <h2 class="mb-0">All Tours</h2>
+                    <a href="/" class="btn btn-outline-dark">← Home</a>
+                </div>
+
+                <div class="row">
+                    {% for d in Tours %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card overflow-hidden shadow position-relative">
+
+                            {% if d.IsTop %}
+                            <span class="badge bg-danger position-absolute m-3">Top</span>
+                            {% endif %}
+
+                            <img class="card-img-top" src="{{ d.ImageUrl }}" alt="{{ d.Title }}" />
+
+                            <div class="card-body py-4 px-3">
+                                <div class="d-flex flex-column flex-lg-row justify-content-between mb-3">
+                                    <h4 class="text-secondary fw-medium">
+                                        <a class="link-900 text-decoration-none stretched-link" href="/tours/{{ d.Id }}">
+                                            {{ d.Title }}
+                                        </a>
+                                    </h4>
+                                    <span class="fs-1 fw-medium">{{ d.PriceText }}</span>
+                                </div>
+
+                                <div class="d-flex align-items-center">
+                                    <img src="/jadoo/assets/img/dest/navigation.svg" style="margin-right: 14px" width="20" alt="navigation" />
+                                    <span class="fs-0 fw-medium">{{ d.DurationText }}</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+        </section>
+    </main>
+</body>
+</html>

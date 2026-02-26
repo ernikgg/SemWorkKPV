@@ -13,7 +13,6 @@ public sealed class AuthService
     {
         var uid = AuthCookie.GetUserId(ctx);
         if (uid is null) return false;
-
         var role = await _repo.GetUserRoleAsync(uid.Value, ct);
         return string.Equals(role, "admin", StringComparison.OrdinalIgnoreCase);
     }

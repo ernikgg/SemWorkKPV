@@ -111,7 +111,7 @@ async Task CorePipeline(HttpContext ctx)
 
     Console.WriteLine($"REQ {ctx.Method} {ctx.Path}");
 
-    // /admin/tours/edit/{id} (GET + POST)
+
     if (ctx.Path.StartsWith("/admin/tours/edit/", StringComparison.OrdinalIgnoreCase))
     {
         var tail = ctx.Path["/admin/tours/edit/".Length..].Trim('/');
@@ -132,16 +132,13 @@ async Task CorePipeline(HttpContext ctx)
             }
         }
 
-        // кривой id или метод → назад
         ctx.Response.StatusCode = 302;
         ctx.Response.RedirectLocation = "/admin/tours";
         return;
     }
 
-    // /admin/tours/delete/{id} (POST only)
     if (ctx.Path.StartsWith("/admin/tours/delete/", StringComparison.OrdinalIgnoreCase))
     {
-        // запрещаем удаление через GET
         if (!ctx.Method.Equals("POST", StringComparison.OrdinalIgnoreCase))
         {
             ctx.Response.StatusCode = 302;

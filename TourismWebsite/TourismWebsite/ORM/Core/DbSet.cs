@@ -40,7 +40,7 @@ public sealed class DbSet<T> where T : new()
         if (_map.KeyProperty is null || _map.KeyColumnName is null)
             throw new InvalidOperationException($"{typeof(T).Name} has no [Key].");
 
-        // INSERT только по не-key колонкам (обычно id serial)
+
         var insertCols = _map.Columns.Where(c => !c.IsKey).ToList();
         var colList = string.Join(", ", insertCols.Select(c => c.ColumnName));
         var paramList = string.Join(", ", insertCols.Select((c, i) => "@p" + i));
@@ -63,9 +63,7 @@ public sealed class DbSet<T> where T : new()
         return newId;
     }
 
-    /// <summary>
-    /// WhereSql — это кусок после WHERE, например: "is_top = true" или "title ILIKE @p"
-    /// </summary>
+
     public async Task<IReadOnlyList<T>> WhereAsync(string whereSql, object? parameters = null, CancellationToken ct = default)
     {
         var selectList = string.Join(", ", _map.Columns.Select(c => c.ColumnName));

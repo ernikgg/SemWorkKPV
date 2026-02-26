@@ -42,12 +42,12 @@ var getData = function getData(el, data) {
     return el.dataset[camelize(data)];
   }
 };
-/* ----------------------------- Colors function ---------------------------- */
+
 
 
 var hexToRgb = function hexToRgb(hexValue) {
   var hex;
-  hexValue.indexOf("#") === 0 ? hex = hexValue.substring(1) : hex = hexValue; // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+  hexValue.indexOf("#") === 0 ? hex = hexValue.substring(1) : hex = hexValue; 
 
   var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
   var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex.replace(shorthandRegex, function (m, r, g, b) {
@@ -61,7 +61,7 @@ var rgbaColor = function rgbaColor() {
   var alpha = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0.5;
   return "rgba(".concat(hexToRgb(color), ", ").concat(alpha, ")");
 };
-/* --------------------------------- Colors --------------------------------- */
+
 
 
 var colors = {
@@ -116,7 +116,7 @@ var isScrolledIntoView = function isScrolledIntoView(el) {
   var height = el.offsetHeight;
 
   while (el.offsetParent) {
-    // eslint-disable-next-line no-param-reassign
+
     el = el.offsetParent;
     top += el.offsetTop;
     left += el.offsetLeft;
@@ -149,7 +149,7 @@ var getBreakpoint = function getBreakpoint(el) {
 
   return breakpoint;
 };
-/* --------------------------------- Cookie --------------------------------- */
+
 
 
 var setCookie = function setCookie(name, value, expire) {
@@ -171,13 +171,13 @@ var settings = {
     borderColor: "rgba(255, 255, 255, 0.8)"
   }
 };
-/* -------------------------- Chart Initialization -------------------------- */
+
 
 var newChart = function newChart(chart, config) {
   var ctx = chart.getContext("2d");
   return new window.Chart(ctx, config);
 };
-/* ---------------------------------- Store --------------------------------- */
+
 
 
 var getItemFromStore = function getItemFromStore(key, defaultValue) {
@@ -223,11 +223,7 @@ var utils = {
   setItemToStore: setItemToStore,
   getStoreSpace: getStoreSpace
 };
-/* -------------------------------------------------------------------------- */
 
-/*                                  Detector                                  */
-
-/* -------------------------------------------------------------------------- */
 
 var detectorInit = function detectorInit() {
   var _window = window,
@@ -247,9 +243,7 @@ var detectorInit = function detectorInit() {
   is.windows() && addClass(html, 'windows');
   navigator.userAgent.match('CriOS') && addClass(html, 'chrome');
 };
-/*-----------------------------------------------
-|   Top navigation opacity on scroll
------------------------------------------------*/
+
 
 
 var navbarInit = function navbarInit() {
@@ -270,7 +264,7 @@ var navbarInit = function navbarInit() {
   var DataKey = {
     NAVBAR_ON_SCROLL: 'navbar-light-on-scroll'
   };
-  var navbar = document.querySelector(Selector.NAVBAR); // responsive nav collapsed
+  var navbar = document.querySelector(Selector.NAVBAR); 
 
   navbar.addEventListener('click', function (e) {
     if (e.target.classList.contains('nav-link') && window.innerWidth < utils.getBreakpoint(navbar)) {
@@ -296,11 +290,11 @@ var navbarInit = function navbarInit() {
         backgroundImage = _window$getComputedSt.backgroundImage;
 
     var transition = 'background-color,padding 0.35s ease';
-    navbar.style.backgroundImage = 'none'; // Change navbar background color on scroll
+    navbar.style.backgroundImage = 'none'; 
 
     window.addEventListener(Events.SCROLL, function () {
       var scrollTop = html.scrollTop;
-      var alpha = scrollTop / windowHeight * 0.35; // Add class on scroll
+      var alpha = scrollTop / windowHeight * 0.35; 
 
       navbar.classList.add('backdrop');
 
@@ -312,16 +306,15 @@ var navbarInit = function navbarInit() {
       navbar.style.backgroundColor = "rgba(".concat(colorRgb[0], ", ").concat(colorRgb[1], ", ").concat(colorRgb[2], ", ").concat(alpha, ")");
       navbar.style.backgroundImage = alpha > 0 || utils.hasClass(navbarCollapse, 'show') ? backgroundImage : 'none';
       alpha > 0 || utils.hasClass(navbarCollapse, 'show') ? navbar.classList.add(paddingName) : navbar.classList.remove(paddingName);
-    }); // Toggle bg class on window resize
+    }); 
 
     utils.resize(function () {
       var breakPoint = utils.getBreakpoint(navbar);
 
       if (window.innerWidth > breakPoint) {
-        navbar.style.backgroundImage = html.scrollTop ? backgroundImage : 'none'; // navbar.style.transition = 'none';
+        navbar.style.backgroundImage = html.scrollTop ? backgroundImage : 'none';
       } else if (!utils.hasClass(navbar.querySelector(Selector.NAVBAR_TOGGLER), ClassNames.COLLAPSED)) {
-        // navbar.classList.add(bgClassName);
-        // navbar.classList.add(paddingName);
+
         navbar.style.backgroundImage = backgroundImage;
       }
 
@@ -329,13 +322,13 @@ var navbarInit = function navbarInit() {
       }
     });
     navbarCollapse.addEventListener(Events.SHOW_BS_COLLAPSE, function () {
-      navbar.classList.add(bgClassName); // navbar.classList.add(paddingName);
+      navbar.classList.add(bgClassName); 
 
       navbar.style.backgroundImage = backgroundImage;
       navbar.style.transition = transition;
     });
     navbarCollapse.addEventListener(Events.HIDE_BS_COLLAPSE, function () {
-      navbar.classList.remove(bgClassName); // navbar.classList.remove(paddingName);
+      navbar.classList.remove(bgClassName);
 
       !html.scrollTop && (navbar.style.backgroundImage = 'none');
     });
@@ -366,9 +359,7 @@ var scrollToTop = function scrollToTop() {
       window.location.hash = id;
     });
   });
-}; // /* -------------------------------------------------------------------------- */
-// /*                            Theme Initialization                            */
-// /* -------------------------------------------------------------------------- */
+}; 
 
 
 docReady(navbarInit);

@@ -19,7 +19,6 @@ public sealed class JsonResult : IActionResult
     {
         ctx.Response.StatusCode = _statusCode;
         ctx.Response.ContentType = "application/json; charset=utf-8";
-
         var json = JsonSerializer.Serialize(_data, new JsonSerializerOptions
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase

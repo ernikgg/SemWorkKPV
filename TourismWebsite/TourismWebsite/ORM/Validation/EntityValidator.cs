@@ -13,7 +13,6 @@ public static class EntityValidator
         {
             var value = c.Property.GetValue(entity);
 
-            // Required
             if (c.Required)
             {
                 if (value is null)
@@ -22,11 +21,9 @@ public static class EntityValidator
                     errors.Add($"{c.Property.Name} is required.");
             }
 
-            // Column IsNullable=false
             if (!c.IsNullable && value is null)
                 errors.Add($"{c.Property.Name} cannot be null.");
 
-            // MaxLength
             if (c.MaxLength is not null && value is string str && str.Length > c.MaxLength.Value)
                 errors.Add($"{c.Property.Name} max length is {c.MaxLength.Value}.");
         }

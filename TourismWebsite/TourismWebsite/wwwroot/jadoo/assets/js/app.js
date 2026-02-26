@@ -83,8 +83,8 @@
     const durationErr = document.getElementById("tourDurationErr");
     const imageErr = document.getElementById("tourImageErr");
 
-    const rePrice = /^\$\s?\d+(?:[.,]\d+)?k?$/i;     // $5,42k / $4.2k / $15k
-    const reDuration = /^\d+\s+Days\s+Trip$/i;       // 10 Days Trip
+    const rePrice = /^\$\s?\d+(?:[.,]\d+)?k?$/i;     
+    const reDuration = /^\d+\s+Days\s+Trip$/i;       
     const reImg = /^(\/|https?:\/\/).+\.(png|jpg|jpeg|webp|svg)$/i;
 
     function setInvalid(input, errEl, msg) {

@@ -19,10 +19,8 @@ public sealed class ViewResult : IActionResult
     public async Task ExecuteAsync(HttpContext ctx)
     {
         var html = await _engine.RenderViewAsync(_viewName, _model);
-
         ctx.Response.StatusCode = 200;
         ctx.Response.ContentType = "text/html; charset=utf-8";
-
         var bytes = System.Text.Encoding.UTF8.GetBytes(html);
         await ctx.Response.OutputStream.WriteAsync(bytes, 0, bytes.Length);
     }

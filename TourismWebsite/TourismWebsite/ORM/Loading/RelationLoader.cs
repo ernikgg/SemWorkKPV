@@ -32,7 +32,6 @@ internal static class RelationLoader
         if (fkValue is not int fkId)
             throw new InvalidOperationException("Only int FK is supported in this step.");
 
-        // загрузим связанную сущность через FindAsync
         var nav = await ctx.Set<TNav>().FindAsync(fkId, ct);
         navProp.SetValue(entity, nav);
     }
@@ -49,7 +48,6 @@ internal static class RelationLoader
         var navProp = GetProperty(navExpr);
         var fkProp = FindForeignKeyProperty(typeof(T), navProp.Name);
 
-        // собрать все FK
         var ids = new HashSet<int>();
         var fkByEntity = new Dictionary<T, int>();
 
@@ -63,14 +61,12 @@ internal static class RelationLoader
             }
             else
             {
-                // null FK → null nav
                 navProp.SetValue(e, null);
             }
         }
 
         if (ids.Count == 0) return;
 
-        // вытаскиваем все категории одним запросом: WHERE id IN (...)
         var navMap = EntityMapCache.Get<TNav>();
         if (navMap.KeyColumnName is null)
             throw new InvalidOperationException($"{typeof(TNav).Name} must have [Key].");
@@ -95,12 +91,10 @@ internal static class RelationLoader
         while (await reader.ReadAsync(ct))
         {
             var nav = Materializer.ReadEntity<TNav>(reader, navMap);
-            // key всегда int на этом шаге
             var keyVal = (int)(navMap.KeyProperty!.GetValue(nav)!);
             loaded[keyVal] = nav;
         }
 
-        // разложить по сущностям
         foreach (var kv in fkByEntity)
         {
             if (loaded.TryGetValue(kv.Value, out var nav))
@@ -120,7 +114,6 @@ internal static class RelationLoader
 
     private static PropertyInfo FindForeignKeyProperty(Type entityType, string navigationName)
     {
-        // ищем свойство с [ForeignKey(nameof(Navigation))]
         var props = entityType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
         foreach (var p in props)
@@ -131,7 +124,6 @@ internal static class RelationLoader
                 return p;
         }
 
-        // fallback по конвенции: NavigationName + "Id"
         var byConvention = props.FirstOrDefault(p => p.Name == navigationName + "Id");
         if (byConvention is not null)
             return byConvention;

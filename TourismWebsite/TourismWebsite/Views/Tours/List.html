@@ -16,8 +16,14 @@
                     <h2 class="mb-0">All Tours</h2>
                     <a href="/" class="btn btn-outline-dark">← Home</a>
                 </div>
-
-                <div class="row">
+                <div class="mb-4">
+                    <input id="tourSearch"
+                           class="form-control"
+                           placeholder="Search tours..."
+                           autocomplete="off" />
+                    <div id="tourSearchHint" class="form-text"></div>
+                </div>
+                <div class="row" id="toursGrid">
                     {% for d in Tours %}
                     <div class="col-md-4 mb-4">
                         <div class="card overflow-hidden shadow position-relative">
@@ -52,5 +58,6 @@
             </div>
         </section>
     </main>
+    <script src="/js/app.js"></script>
 </body>
 </html>

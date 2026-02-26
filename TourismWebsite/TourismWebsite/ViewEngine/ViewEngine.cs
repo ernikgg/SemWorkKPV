@@ -17,6 +17,7 @@ public sealed class ViewEngine
 
     private readonly string _viewsRootPath;
 
+
     public ViewEngine(string viewsRootPath)
     {
         _viewsRootPath = viewsRootPath;
@@ -32,24 +33,19 @@ public sealed class ViewEngine
 
         var template = await File.ReadAllTextAsync(fullPath, Encoding.UTF8);
 
-        if (model is null) return template;
+        if (model is null) return template; 
 
-        // 1) циклы
         template = ForBlockRegex.Replace(template, m =>
         {
-            var varName = m.Groups["var"].Value.Trim();      // tour
-            var listExpr = m.Groups["list"].Value.Trim();    // TopDestinations
-            var body = m.Groups["body"].Value;               // HTML внутри
-
+            var varName = m.Groups["var"].Value.Trim();    
+            var listExpr = m.Groups["list"].Value.Trim();   
+            var body = m.Groups["body"].Value;               
             var listObj = ResolveExpression(model, listExpr);
             if (listObj is not System.Collections.IEnumerable items)
-                return string.Empty;
-
+                return string.Empty; 
             var sb = new StringBuilder();
             foreach (var item in items)
             {
-                // Внутри цикла позволяем обращаться к переменной цикла:
-                // {{ tour.Title }}, {{ tour.Price }}
                 var localModel = new ScopeModel(model, varName, item);
                 var rendered = TokenRegex.Replace(body, mm =>
                 {
@@ -62,10 +58,9 @@ public sealed class ViewEngine
             }
             return sb.ToString();
         });
-        // 2) if
         template = IfBlockRegex.Replace(template, m =>
         {
-            var condExpr = m.Groups["cond"].Value.Trim(); // d.IsTop
+            var condExpr = m.Groups["cond"].Value.Trim(); 
             var body = m.Groups["body"].Value;
 
             var condValue = ResolveExpression(model, condExpr);
@@ -76,7 +71,6 @@ public sealed class ViewEngine
             return string.Empty;
         });
 
-        // 2)  {{ }}
         template = TokenRegex.Replace(template, m =>
         {
             var expr = m.Groups["expr"].Value.Trim();
@@ -89,10 +83,6 @@ public sealed class ViewEngine
 
     private static object? ResolveExpression(object model, string expr)
     {
-        // Поддержим:
-        // 1) HeroTitle
-        // 2) Model.HeroTitle (на будущее)
-        // 3) вложенные: A.B.C
         var path = expr;
 
         if (path.StartsWith("Model.", StringComparison.OrdinalIgnoreCase))
@@ -103,7 +93,6 @@ public sealed class ViewEngine
         {
             if (current is null) return null;
 
-            // если это словарь
             if (current is IReadOnlyDictionary<string, object?> rod && rod.TryGetValue(part, out var v1))
             {
                 current = v1;
@@ -137,7 +126,7 @@ public sealed class ViewEngine
             _varValue = varValue;
         }
 
-        public object? this[string key] => TryGetValue(key, out var v) ? v : null;
+        public object? this[string key] => TryGetValue(key, out var v) ? v : null;  
 
         public IEnumerable<string> Keys => new[] { "Model", _varName };
         public IEnumerable<object?> Values => new object?[] { _root, _varValue };

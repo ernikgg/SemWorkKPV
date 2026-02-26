@@ -23,13 +23,12 @@ public static class EntityMapCache
 
         foreach (var p in t.GetProperties(BindingFlags.Instance | BindingFlags.Public))
         {
-            // навигации не считаем колонками
             if (p.GetCustomAttribute<NavigationAttribute>() is not null)
                 continue;
 
             var colAttr = p.GetCustomAttribute<ColumnAttribute>();
             if (colAttr is null)
-                continue; // только явно размеченные свойства — меньше магии, меньше багов
+                continue; 
 
             var isKey = p.GetCustomAttribute<KeyAttribute>() is not null;
             if (isKey)

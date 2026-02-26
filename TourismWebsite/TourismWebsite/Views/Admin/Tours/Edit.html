@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Edit Tour</title>
+</head>
+<body>
+    <h1>Edit Tour #{{ Id }}</h1>
+
+    {% if Error %}
+    <p style="color:red">{{ Error }}</p>
+    {% endif %}
+
+    <form method="post" action="/admin/tours/edit/{{ Id }}">
+        <div>
+            <label>Title</label><br />
+            <input name="Title" value="{{ Tour.Title }}" />
+        </div>
+
+        <div>
+            <label>Price</label><br />
+            <input name="PriceText" value="{{ Tour.PriceText }}" />
+        </div>
+
+        <div>
+            <label>Duration</label><br />
+            <input name="DurationText" value="{{ Tour.DurationText }}" />
+        </div>
+
+        <div>
+            <label>Image URL</label><br />
+            <input name="ImageUrl" value="{{ Tour.ImageUrl }}" />
+        </div>
+
+        <div>
+            <label>
+                <input type="checkbox" name="IsTop" />
+                Is Top (поставь галочку если нужно)
+            </label>
+        </div>
+
+        <button type="submit">Save</button>
+    </form>
+    <form id="tourForm" method="post" action="...">
+        <div class="mb-3">
+            <label class="form-label">Title</label>
+            <input id="tourTitle" class="form-control" name="Title" />
+            <div class="invalid-feedback" id="tourTitleErr"></div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">PriceText</label>
+            <input id="tourPrice" class="form-control" name="PriceText" />
+            <div class="invalid-feedback" id="tourPriceErr"></div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">DurationText</label>
+            <input id="tourDuration" class="form-control" name="DurationText" />
+            <div class="invalid-feedback" id="tourDurationErr"></div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">ImageUrl</label>
+            <input id="tourImage" class="form-control" name="ImageUrl" />
+            <div class="invalid-feedback" id="tourImageErr"></div>
+        </div>
+
+        <button id="tourSubmit" class="btn btn-primary" type="submit">Save</button>
+    </form>
+
+    <script src="/js/app.js"></script>
+
+    <p><a href="/admin/tours">← Back</a></p>
+</body>
+</html>

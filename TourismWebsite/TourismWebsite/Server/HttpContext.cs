@@ -8,6 +8,7 @@ public sealed class HttpContext
 
     public HttpListenerRequest Request => Raw.Request;
     public HttpListenerResponse Response => Raw.Response;
+    public Dictionary<string, string> RouteValues { get; } = new(StringComparer.OrdinalIgnoreCase);
 
     public string Method => Request.HttpMethod.ToUpperInvariant();
     public string Path => Request.Url?.AbsolutePath ?? "/";

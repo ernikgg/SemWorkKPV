@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Create Tour</title>
+</head>
+<body>
+    <h1>Create Tour</h1>
+
+    {% if Error %}
+    <p style="color:red">{{ Error }}</p>
+    {% endif %}
+
+    <form method="post" action="/admin/tours/create">
+        <div>
+            <label>Title</label><br />
+            <input name="Title" />
+        </div>
+
+        <div>
+            <label>Price</label><br />
+            <input name="PriceText" placeholder="$5,42k" />
+        </div>
+
+        <div>
+            <label>Duration</label><br />
+            <input name="DurationText" placeholder="10 Days Trip" />
+        </div>
+
+        <div>
+            <label>Image URL</label><br />
+            <input name="ImageUrl" placeholder="/jadoo/assets/img/dest/dest1.jpg" />
+        </div>
+
+        <div>
+            <label>
+                <input type="checkbox" name="IsTop" />
+                Is Top
+            </label>
+        </div>
+
+        <button type="submit">Create</button>
+    </form>
+
+    <p>
+        <a href="/admin/tours">← Back to list</a>
+    </p>
+</body>
+</html>

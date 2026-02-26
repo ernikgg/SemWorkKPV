@@ -17,6 +17,8 @@ public sealed class RedirectResult : IActionResult
     {
         ctx.Response.StatusCode = _statusCode;
         ctx.Response.RedirectLocation = _location;
+        ctx.Response.ContentLength64 = 0;
+        ctx.Response.Close(); 
         return Task.CompletedTask;
     }
 }

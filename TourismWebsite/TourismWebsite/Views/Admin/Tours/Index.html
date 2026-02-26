@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Admin - Tours</title>
+</head>
+<body>
+    <h1>Tours (Admin)</h1>
+
+    <p><a href="/admin">? Back to admin</a></p>
+    <p><a href="/admin/tours/create">+ Create new tour</a></p>
+
+    <table border="1" cellpadding="6" cellspacing="0">
+        <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Price</th>
+            <th>Duration</th>
+            <th>IsTop</th>
+            <th>Actions</th>
+        </tr>
+
+        {% for t in Tours %}
+        <tr>
+            <td>{{ t.Id }}</td>
+            <td>{{ t.Title }}</td>
+            <td>{{ t.PriceText }}</td>
+            <td>{{ t.DurationText }}</td>
+            <td>{{ t.IsTop }}</td>
+            <td>
+                <a href="/tours/{{ t.Id }}">View</a>
+                |
+                <a href="/admin/tours/edit/{{ t.Id }}">Edit</a>
+                |
+                <form method="post" action="/admin/tours/delete/{{ t.Id }}" style="display:inline;">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

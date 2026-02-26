@@ -1,4 +1,5 @@
-﻿using TourismServer.Results;
+﻿using System.Data.Common;
+using TourismServer.Results;
 using TourismServer.ViewEngine;
 
 namespace TourismServer.Controllers;
@@ -14,4 +15,9 @@ public abstract class ControllerBase
 
     protected IActionResult View(string viewName, object? model = null)
         => new ViewResult(Views, viewName, model);
+    protected IActionResult Redirect(string location, int statusCode = 302)
+    {
+        return new RedirectResult(location, statusCode);
+    }
+
 }

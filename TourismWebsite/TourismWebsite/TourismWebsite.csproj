@@ -11,7 +11,6 @@
     <Folder Include="Views\Home\" />
     <Folder Include="Views\Tours\" />
     <Folder Include="wwwroot\jadoo\assets\css\" />
-    <Folder Include="wwwroot\jadoo\assets\js\" />
     <Folder Include="wwwroot\jadoo\assets\img\" />
     <Folder Include="Sql\" />
   </ItemGroup>
@@ -25,6 +24,13 @@
     <Content Include="Views\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="views\admin\Index.html" />
+    <None Remove="views\admin\tours\Create.html" />
+    <None Remove="views\admin\tours\Edit.html" />
+    <None Remove="views\admin\tours\Index.html" />
+    <None Remove="wwwroot\jadoo\assets\js\app.js" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Npgsql" Version="8.0.8" />

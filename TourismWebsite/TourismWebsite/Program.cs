@@ -1,4 +1,6 @@
-﻿using TourismServer.Controllers;
+﻿using System.Net.WebSockets;
+using TourismServer.Auth;
+using TourismServer.Controllers;
 using TourismServer.Data;
 using TourismServer.Models;
 using TourismServer.Orm;
@@ -19,108 +21,156 @@ var contentRoot = AppContext.BaseDirectory;
 var viewsRoot = Path.Combine(contentRoot, "Views");
 var viewEngine = new ViewEngine(viewsRoot);
 
-// TODO: вынесем в конфиг позже
+
 var connString = Environment.GetEnvironmentVariable("DB_CONNECTION")
-               ?? "Host=localhost;Port=5432;Database=tourism;Username=postgres;Password=14735K264L";
+               ?? "Host=localhost;Port=5432;Database=tourism;Username=postgres;Password=new_password";
 
 
 ITourRepository tourRepo = new PgTourRepository(connString);
-
+var authRepo = new PgAuthRepository(connString);
+var authService = new AuthService(authRepo);
 var home = new HomeController(viewEngine, tourRepo);
 var tours = new ToursController(viewEngine, tourRepo);
+var auth = new AuthController(viewEngine, connString);
+var admin = new AdminController(viewEngine, authService);
+var adminTours = new AdminToursController(viewEngine, tourRepo, authService);
+var apiTours = new ApiToursController(tourRepo);
+
+router.Get("/api/tours", async ctx =>
+{
+    var result = await apiTours.ListAsync(ctx, cts.Token);
+    await result.ExecuteAsync(ctx);
+});
+router.Post("/auth/login", async ctx =>
+{
+    var result = await auth.LoginPostAsync(ctx, cts.Token);
+    await result.ExecuteAsync(ctx);
+});
+router.Post("/auth/logout", async ctx =>
+{
+    var result = await auth.LogoutPostAsync(ctx, cts.Token);
+    await result.ExecuteAsync(ctx);
+});
+
+router.Post("/auth/signup", async ctx =>
+{
+    var result = await auth.SignUpPostAsync(ctx, cts.Token);
+    await result.ExecuteAsync(ctx);
+});
+router.Get("/tours", async ctx =>
+{
+    var result = await tours.ListAsync(ctx, cts.Token);
+    await result.ExecuteAsync(ctx);
+});
+
+router.Get("/tours/{id:int}", async ctx =>
+{
+    var id = int.Parse(ctx.RouteValues["id"]);
+    var result = await tours.DetailsAsync(ctx, id, cts.Token);
+    await result.ExecuteAsync(ctx);
+});
+router.Get("/admin/tours", async ctx =>
+{
+    var result = await adminTours.IndexAsync(ctx, cts.Token);
+    await result.ExecuteAsync(ctx);
+});
 
 router.Get("/", async ctx =>
 {
-    var result = await home.IndexAsync(cts.Token);
+    var result = await home.IndexAsync(ctx, cts.Token);
+    await result.ExecuteAsync(ctx);
+});
+router.Post("/api/admin/tours/create", async ctx =>
+{
+    var result = await adminTours.CreateAjaxAsync(ctx, cts.Token);
+    await result.ExecuteAsync(ctx);
+});
+router.Get("/admin", async ctx =>
+{
+    var result = await admin.IndexAsync(ctx, cts.Token);
+    await result.ExecuteAsync(ctx);
+});
+router.Get("/admin/tours/create", async ctx =>
+{
+    var result = await adminTours.CreateGetAsync(ctx, cts.Token);
+    await result.ExecuteAsync(ctx);
+});
+
+router.Post("/admin/tours/create", async ctx =>
+{
+    var result = await adminTours.CreatePostAsync(ctx, cts.Token);
     await result.ExecuteAsync(ctx);
 });
 
 var staticFiles = new StaticFileMiddleware(Path.Combine(contentRoot, "wwwroot"));
 
-async Task Pipeline(HttpContext ctx)
+async Task CorePipeline(HttpContext ctx)
 {
     if (await staticFiles.TryHandleAsync(ctx))
         return;
 
-    if (ctx.Path.StartsWith("/tours/", StringComparison.OrdinalIgnoreCase))
-    {
-        var tail = ctx.Path["/tours/".Length..].Trim('/');
+    Console.WriteLine($"REQ {ctx.Method} {ctx.Path}");
 
+    // /admin/tours/edit/{id} (GET + POST)
+    if (ctx.Path.StartsWith("/admin/tours/edit/", StringComparison.OrdinalIgnoreCase))
+    {
+        var tail = ctx.Path["/admin/tours/edit/".Length..].Trim('/');
         if (int.TryParse(tail, out var id))
         {
-            var result = await tours.DetailsAsync(id, cts.Token);
+            if (ctx.Method.Equals("GET", StringComparison.OrdinalIgnoreCase))
+            {
+                var result = await adminTours.EditGetAsync(ctx, id, cts.Token);
+                await result.ExecuteAsync(ctx);
+                return;
+            }
+
+            if (ctx.Method.Equals("POST", StringComparison.OrdinalIgnoreCase))
+            {
+                var result = await adminTours.EditPostAsync(ctx, id, cts.Token);
+                await result.ExecuteAsync(ctx);
+                return;
+            }
+        }
+
+        // кривой id или метод → назад
+        ctx.Response.StatusCode = 302;
+        ctx.Response.RedirectLocation = "/admin/tours";
+        return;
+    }
+
+    // /admin/tours/delete/{id} (POST only)
+    if (ctx.Path.StartsWith("/admin/tours/delete/", StringComparison.OrdinalIgnoreCase))
+    {
+        // запрещаем удаление через GET
+        if (!ctx.Method.Equals("POST", StringComparison.OrdinalIgnoreCase))
+        {
+            ctx.Response.StatusCode = 302;
+            ctx.Response.RedirectLocation = "/admin/tours";
+            return;
+        }
+
+        var tail = ctx.Path["/admin/tours/delete/".Length..].Trim('/');
+        if (int.TryParse(tail, out var id))
+        {
+            var result = await adminTours.DeletePostAsync(ctx, id, cts.Token);
             await result.ExecuteAsync(ctx);
             return;
         }
-    }
 
-    if (ctx.Path.Equals("/tours", StringComparison.OrdinalIgnoreCase)
-    || ctx.Path.Equals("/tours/", StringComparison.OrdinalIgnoreCase))
-    {
-        var result = await tours.ListAsync(cts.Token);
-        await result.ExecuteAsync(ctx);
+        ctx.Response.StatusCode = 302;
+        ctx.Response.RedirectLocation = "/admin/tours";
         return;
     }
+
     if (await router.TryHandleAsync(ctx))
         return;
 
-
-    ctx.Response.StatusCode = 404;
-    ctx.Response.ContentType = "text/plain; charset=utf-8";
-    var bytes = System.Text.Encoding.UTF8.GetBytes("404 Not Found");
-    await ctx.Response.OutputStream.WriteAsync(bytes, 0, bytes.Length);
+    ctx.Response.StatusCode = 302;
+    ctx.Response.RedirectLocation = "/";
 }
 
+var exceptionMw = new ExceptionHandlingMiddleware(CorePipeline);
+async Task Pipeline(HttpContext ctx) => await exceptionMw.InvokeAsync(ctx);
 
-/*test
-
-await using var ctxOrm = new OrmDbContext(connString);
-
-// 1) получаем список туров из ORM
-var tourList = await ctxOrm.Set<Tour>().ToListAsync(cts.Token);
-
-// 2) догружаем Category
-await ctxOrm.LoadAsync(tourList, t => t.Category, cts.Token);
-
-Console.WriteLine($"Tours: {tourList.Count}");
-foreach (var t in tourList)
-{
-    Console.WriteLine($"#{t.Id} {t.Title} | cat={(t.Category?.Name ?? "null")}");
-}
-
-test */
-
-//test
-
-/* test
-Console.WriteLine("[VALIDATION TEST] start");
-
-try
-{
-    await using var ctxOrm = new OrmDbContext(connString);
-
-    var bad = new Tour
-    {
-        Title = "",                 // Required нарушен
-        PriceText = "x",
-        DurationText = "x",
-        ImageUrl = "x",
-        IsTop = false
-    };
-
-    await ctxOrm.Set<Tour>().AddAsync(bad, cts.Token);
-
-    Console.WriteLine("[VALIDATION TEST] FAILED (should have thrown)");
-}
-catch (ValidationException ex)
-{
-    Console.WriteLine("[VALIDATION TEST] OK");
-    foreach (var e in ex.Errors)
-        Console.WriteLine(" - " + e);
-}
-
-Console.WriteLine("[VALIDATION TEST] end");
-
- test validation */
 var server = new HttpServer("http://localhost:8080/", Pipeline);
 await server.StartAsync(cts.Token);
